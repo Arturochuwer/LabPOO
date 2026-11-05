@@ -24,10 +24,33 @@ The following guides illustrate how to use some features concretely:
 * [Handling Form Submission](https://spring.io/guides/gs/handling-form-submission/)
 * [Accessing Data with JPA](https://spring.io/guides/gs/accessing-data-jpa/)
 
+### SQL Server Express
+
+Create the database in SSMS using **New Query**:
+
+```sql
+IF DB_ID(N'agenda') IS NULL
+    CREATE DATABASE agenda;
+GO
+```
+
+The application connects by default to the `SQLEXPRESS` instance. Configure a
+SQL Server Authentication login and provide its credentials as environment
+variables before starting the application:
+
+```powershell
+$env:DB_USERNAME = "sa"
+$env:DB_PASSWORD = "your-password"
+.\mvnw.cmd spring-boot:run
+```
+
+Change `DB_USERNAME` if you use another SQL login. The JDBC URL can be
+overridden with `DB_URL`. Hibernate creates or updates the contact table in
+`agenda`; application tests use an isolated in-memory H2 database.
+
 ### Maven Parent overrides
 
 Due to Maven's design, elements are inherited from the parent POM to the project POM.
 While most of the inheritance is fine, it also inherits unwanted elements like `<license>` and `<developers>` from the parent.
 To prevent this, the project POM contains empty overrides for these elements.
 If you manually switch to a different parent and actually want the inheritance, you need to remove those overrides.
-

@@ -1,7 +1,7 @@
 package com.gremio.controller;
 
 import com.gremio.model.Contacto;
-import com.gremio.repository.ContactoRepository;
+import com.gremio.service.ContactoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,33 +15,33 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @Controller
 public class ContactoController {
 
-    private final ContactoRepository repo;
+    private final ContactoService service;
 
-    public ContactoController(ContactoRepository repo) {
-        this.repo = repo;
+    public ContactoController(ContactoService service) {
+        this.service = service;
     }
 
     @GetMapping("/contactos")
     public String listar(Model model) {
-        model.addAttribute("contactos", repo.findAll());
+        model.addAttribute("contactos", service.listarTodos());
         return "contactos";
     }
 
     @GetMapping("/nuevo")
     public String formulario(Model model) {
         model.addAttribute("contacto", new Contacto());
-        return "nuevo";
+        return "formulario";
     }
 
     @GetMapping("/editar/{id}")
     public String editar(@PathVariable Long id, Model model) {
         model.addAttribute("contacto", buscarContacto(id));
-        return "nuevo";
+        return "formulario";
     }
 
     @PostMapping("/guardar")
     public String guardar(@ModelAttribute Contacto contacto) {
-        repo.save(contacto);
+        service.guardar(contacto);
         return "redirect:/contactos";
     }
 
@@ -52,18 +52,19 @@ public class ContactoController {
         contacto.setApellido(datosContacto.getApellido());
         contacto.setEmail(datosContacto.getEmail());
         contacto.setTelefono(datosContacto.getTelefono());
-        repo.save(contacto);
+        service.guardar(contacto);
         return "redirect:/contactos";
     }
 
     @PostMapping("/eliminar/{id}")
     public String eliminar(@PathVariable Long id) {
-        repo.delete(buscarContacto(id));
+        buscarContacto(id);
+        service.eliminar(id);
         return "redirect:/contactos";
     }
 
     private Contacto buscarContacto(Long id) {
-        return repo.findById(id)
+        return service.buscarPorId(id)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Contacto no encontrado"));
     }
 }
