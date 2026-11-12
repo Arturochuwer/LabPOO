@@ -1,0 +1,4 @@
+com\gremio\repository\ContactoRepository.class
+com\gremio\controller\ContactoController.class
+com\gremio\AgendaWebApplication.class
+com\gremio\model\Contacto.class
