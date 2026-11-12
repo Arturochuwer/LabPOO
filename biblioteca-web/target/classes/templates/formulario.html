@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${libro.id == null} ? 'Nuevo Libro' : 'Editar Libro'">Libro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            margin: 60px 16px 0;
+        }
+        .caja {
+            background: #16213e;
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid #4a90d9;
+            width: 380px;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+        h1 {
+            color: #f0c040;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        label {
+            display: block;
+            margin-bottom: 4px;
+            color: #aaa;
+            font-size: .9em;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 16px;
+            background: #0f3460;
+            border: 1px solid #4a90d9;
+            border-radius: 6px;
+            color: #fff;
+            box-sizing: border-box;
+        }
+        .check {
+            align-items: center;
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .check input {
+            margin: 0;
+            width: auto;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #4a90d9;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 16px;
+            color: #4a90d9;
+        }
+    </style>
+</head>
+<body>
+    <div class="caja">
+        <h1 th:text="${libro.id == null} ? 'Nuevo Libro' : 'Editar Libro'">Libro</h1>
+        <form th:action="${libro.id == null} ? @{/guardar} : @{/actualizar/{id}(id=${libro.id})}"
+              th:object="${libro}" method="post">
+            <label for="titulo">Título</label>
+            <input type="text" th:field="*{titulo}" placeholder="Título" required>
+
+            <label for="autor">Autor</label>
+            <input type="text" th:field="*{autor}" placeholder="Autor" required>
+
+            <label for="genero">Género</label>
+            <input type="text" th:field="*{genero}" placeholder="Novela, Ciencia, Historia...">
+
+            <label for="anio">Año de publicación</label>
+            <input type="number" th:field="*{anio}" placeholder="2001" min="1" max="2100">
+
+            <label class="check">
+                <input type="checkbox" th:field="*{disponible}">
+                Disponible para préstamo
+            </label>
+
+            <button type="submit" th:text="${libro.id == null} ? 'Guardar libro' : 'Actualizar libro'">
+                Guardar libro
+            </button>
+        </form>
+        <a th:href="@{/libros}">Ver todos los libros</a>
+    </div>
+</body>
+</html>
